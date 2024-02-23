@@ -9,6 +9,8 @@ const DashboardScreen = () => {
   const navigation = useNavigation();
   const [displayCurrentAddress, setDisplayCurrentAddress] = useState("We are loading your location...");
   const [locationServicesEnabled, setLocationServicesEnabled] = useState(false);
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
 
   useEffect(() => {
     checkIfLocationEnabled();
@@ -46,6 +48,8 @@ const DashboardScreen = () => {
 
       let location = await Location.getCurrentPositionAsync({});
       const { latitude, longitude } = location.coords;
+      setLatitude(latitude);
+      setLongitude(longitude);
 
       // Use reverse geocoding to get address details
       let addressResponse = await Location.reverseGeocodeAsync({ latitude, longitude });
@@ -61,27 +65,46 @@ const DashboardScreen = () => {
   };
 
   const handleWeatherCategoryPress = (screenName) => {
-    navigation.navigate(screenName);
+    navigation.navigate(screenName, { latitude, longitude });
   };
 
   const buttonsData = [
     {
       id: "0",
       name: "Current Weather",
-      screenName: "CurrentWeather", 
-      iconName: "sun", 
+      screenName: "CurrentWeather",
+      iconName: "wb-sunny",
     },
     {
       id: "1",
-      name: "Future Weather",
-      screenName: "FutureWeather", 
-      iconName: "cloud-sun-rain", 
+      name: "City Weather",
+      screenName: "CityWeather",
+      iconName: "location-city",
     },
     {
       id: "2",
+      name: "Future Weather",
+      screenName: "FutureWeather",
+      iconName: "cloud",
+    },
+    {
+      id: "3",
       name: "Past Weather",
-      screenName: "PastWeather", 
-      iconName: "cloud-sun", 
+      screenName: "PastWeather",
+      iconName: "history",
+    },
+
+    {
+      id: "4",
+      name: "Advisory",
+      screenName: "Advisory",
+      iconName: "notifications",
+    },
+    {
+      id: "5",
+      name: "Crop Predictor",
+      screenName: "CropPredictor",
+      iconName: "agriculture",
     },
   ];
 
@@ -93,6 +116,8 @@ const DashboardScreen = () => {
         <View>
           <Text style={{ fontSize: 18, fontWeight: "600" }}>Home</Text>
           <Text>{displayCurrentAddress}</Text>
+          {/* <Text>Latitude: {latitude}</Text>
+          <Text>Longitude: {longitude}</Text> */}
         </View>
         <Pressable
           onPress={() => navigation.navigate("Profile")}
@@ -111,7 +136,14 @@ const DashboardScreen = () => {
       {/* Weather Category Buttons */}
       <View style={styles.container}>
         {buttonsData.map(({ id, name, iconName, screenName }) => (
-          <Pressable key={id} style={styles.button} onPress={() => handleWeatherCategoryPress(screenName)}>
+          <Pressable
+            key={id}
+            style={({ pressed }) => [
+              styles.button,
+              pressed && styles.selectedButton, // Apply selectedButton style when button is pressed
+            ]}
+            onPress={() => handleWeatherCategoryPress(screenName)}
+          >
             <MaterialIcons name={iconName} size={24} color="black" style={styles.icon} />
             <Text style={styles.text}>{name}</Text>
           </Pressable>
@@ -125,10 +157,21 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
+    flexWrap: 'wrap', // Allow buttons to wrap to the next line if necessary
     marginTop: 20,
   },
   button: {
     alignItems: 'center',
+    justifyContent: 'center',
+    width: '45%', // Adjust the width as needed to fit two buttons in a row
+    aspectRatio: 1, // Maintain a square shape for each button
+    marginVertical: 10, // Add vertical margin between buttons
+    borderRadius: 10, // Rounded corners for button
+    backgroundColor: '#ffffff', // Default background color for button
+    elevation: 5, // Add elevation for a card-like effect
+  },
+  selectedButton: {
+    backgroundColor: '#a0d8ef', // Change background color when button is pressed
   },
   icon: {
     marginBottom: 5,

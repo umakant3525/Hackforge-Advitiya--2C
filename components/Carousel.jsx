@@ -5,10 +5,10 @@ import { SliderBox } from "react-native-image-slider-box";
 const Carousel = () => {
 
   const images = [
-    require("../assets/c1.jpg"),
-    require("../assets/c2.webp"),
-    require("../assets/c3.jpeg"),
-    require("../assets/c4.jpeg"),
+    require("../assets/carousel/1.jpg"),
+    require("../assets/carousel/2.jpg"),
+    require("../assets/carousel/3.jpg"),
+    require("../assets/carousel/4.jpg"),
   ];
 
   return (
