@@ -1,14 +1,12 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const WeatherForecastScreen = () => {
+export default function PastWeather() {
   return (
     <View>
-      <Text>WeatherForecastScreen;</Text>
+      <Text>PastWeather</Text>
     </View>
   )
 }
-
-export default WeatherForecastScreen;
 
 const styles = StyleSheet.create({})
