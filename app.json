@@ -11,6 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "android": {
+      "googleServicesFile": "./google-services.json"
+    },
     "assetBundlePatterns": [
       "**/*"
     ],
